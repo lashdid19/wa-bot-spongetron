@@ -26,7 +26,7 @@ function start(client) {
       await client.sendImage(message.from, message.sender.profilePicThumbObj.eurl, 'profile.jpeg', 'Agak Burik Ya Mukanya :v')
     }
     if (message.body === '/meme') {
-      let meme = await fetch("https://meme-api.herokuapp.com/gimme").then(res => res.json())
+      let meme = await fetch("https://meme-api.herokuapp.com/gimme").then(res => res.json()).catch(err => console.log(err))
       await client.sendImage(message.from, meme.preview[3], 'meme.jpeg', `${meme.title} *by ${meme.author}*`)
     }
     if (message.body === '/sticker') {
