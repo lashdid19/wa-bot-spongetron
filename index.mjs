@@ -1,33 +1,60 @@
+
 import wa from '@open-wa/wa-automate';
 import { decryptMedia } from '@open-wa/wa-decrypt';
+import got from 'got';
+import translate from "translate";
 import fetch from "node-fetch";
 
 wa.create().then(client => start(client))
-
 function start(client) {
   client.onMessage(async message => {
-    if(message.body === '/bisaapa') {
-      await client.sendText(message.from, 'Saya bisa: \n\n- /siapasaya\n- /fotosaya\n- /jadwalsholat\n- /meme\n- /sticker\n\n *Udah Itu Doang*\n\n_minta pembuat gua kalo pengen lebih_');  
+    if(message.body.indexOf('/') == 0) {
+      let command = message.text.split(' ')
+      if(command[0] != ('/meme', '/sticker', '/jadwalsholat', '/tanya', '/katabijak'))
+      await client.sendText(message.from, `Command *${command[0]}* tidak ada.\nKetik /bisaapa.`);  
     }
-    if (message.body === '/siapasaya') {
-      if(message.sender.pushname === ''){
-        await client.sendText(message.from, 'Ibunya kasih nama bagus bagus, nggak dipake');  
+    if(message.body === '/bisaapa') {
+      await client.sendText(message.from, 'Saya bisa: \n\n- /tanya\n- /meme\n- /katabijak\n- /sticker\n- /jadwalsholat\n\n *Udah Itu Doang*\n\n_minta pembuat gua kalo pengen lebih_');  
+    }
+    if(message.text.indexOf('/tanya') > -1 && message.text.indexOf('/tanya') < 1){
+      let ask = message.text.split('/tanya')
+      if(ask.length < 2){
+        await client.sendText(message.from, 'Kirim /tanya *pertanyaan*')
       }
       else{
-        let nameKind = [
-          'Namamu Budi biasa dipanggil ',
-          'Masa nama sendiri nggak tahu? @',
-          'Cari di google, '
-        ]
-        await client.sendText(message.from, nameKind[Math.floor(Math.random() * nameKind.length)] + message.sender.pushname);
+        const prompt = `Q:${ask}?\n`;
+        (async () => {
+          const url = 'https://api.openai.com/v1/engines/davinci/completions';
+          const params = {
+            "prompt": prompt,
+            "stop": "Q:",
+            "max_tokens": 100,
+            "temperature": 0.5,
+            "top_p": 0.5,
+          };
+          const headers = {
+            'Authorization': `Bearer ${process.env.OPENAI_SECRET_KEY}`,
+          };
+
+          try {
+            const response = await got.post(url, { json: params, headers: headers }).json();
+            let output = `${response.choices[0].text}`;
+            let answer = output.split('A:')
+            await client.sendText(message.from, answer[1])
+          } catch (err) {
+            console.log(err);
+          }
+        })();
       }
-    }
-    if (message.body === '/fotosaya') {
-      await client.sendImage(message.from, message.sender.profilePicThumbObj.eurl, 'profile.jpeg', 'Agak Burik Ya Mukanya :v')
     }
     if (message.body === '/meme') {
       let meme = await fetch("https://meme-api.herokuapp.com/gimme").then(res => res.json()).catch(err => console.log(err))
       await client.sendImage(message.from, meme.preview[3], 'meme.jpeg', `${meme.title} *by ${meme.author}*`)
+    }
+    if (message.body === '/katabijak') {
+      let quote = await fetch("https://free-quotes-api.herokuapp.com/").then(res => res.json()).catch(err => console.log(err))
+      let kata = await translate(quote.quote, "id");
+      await client.sendText(message.from, `_${kata}_\n\n${quote.author === "" ? '' : `*~ ${quote.author}*`}`)
     }
     if (message.body === '/sticker') {
       await client.sendText(message.from, 'Kirim gambar dengan caption\n*/sticker*')
@@ -62,3 +89,4 @@ function start(client) {
     }
   });
 }
+
