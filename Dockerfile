@@ -19,4 +19,4 @@ RUN npm install --production
 
 COPY . .
 
-CMD node -r dotenv/config index.mjs
+CMD ["node", "-r", "dotenv/config", "index.mjs"]
