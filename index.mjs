@@ -5,13 +5,15 @@ import got from 'got';
 import translate from "translate";
 import fetch from "node-fetch";
 
+let commands = ['/bisaapa', '/meme', '/sticker', '/jadwalsholat', '/tanya', '/katabijak']
 wa.create().then(client => start(client))
 function start(client) {
   client.onMessage(async message => {
     if(message.body.indexOf('/') == 0) {
       let command = message.text.split(' ')
-      if(command[0] != ('/bisaapa', '/meme', '/sticker', '/jadwalsholat', '/tanya', '/katabijak'))
-      await client.sendText(message.from, `Command *${command[0]}* tidak ada.\nKetik /bisaapa.`);  
+      if(commands.indexOf(command[0]) == -1){
+        await client.sendText(message.from, `Command *${command[0]}* tidak ada.\nKetik /bisaapa.`);  
+      }
     }
     if(message.body === '/bisaapa') {
       await client.sendText(message.from, 'Saya bisa: \n\n- /tanya\n- /meme\n- /katabijak\n- /sticker\n- /jadwalsholat\n\n *Udah Itu Doang*\n\n_minta pembuat gua kalo pengen lebih_');  
