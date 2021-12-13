@@ -9,7 +9,7 @@ let commands = ['/bisaapa', '/meme', '/sticker', '/jadwalsholat', '/tanya', '/ka
 wa.create().then(client => start(client))
 function start(client) {
   client.onMessage(async message => {
-    if(message.body.indexOf('/') == 0) {
+    if(message.body.indexOf('/') === 0) {
       let command = message.text.split(' ')
       if(commands.indexOf(command[0]) == -1){
         await client.sendText(message.from, `Command *${command[0]}* tidak ada.\nKetik /bisaapa.`);  
