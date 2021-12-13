@@ -5,7 +5,7 @@ import got from 'got';
 import translate from "translate";
 import fetch from "node-fetch";
 
-let commands = ['/bisaapa', '/meme', '/sticker', '/jadwalsholat', '/tanya', '/katabijak']
+let commands = ['/bisaapa', '/meme', '/sticker', '/jadwalsholat', '/tanya', '/katabijak', '/enid', '/iden']
 wa.create().then(client => start(client))
 function start(client) {
   client.onMessage(async message => {
@@ -24,7 +24,7 @@ function start(client) {
         await client.sendText(message.from, 'Kirim /tanya *pertanyaan*')
       }
       else{
-        const prompt = `Q:${ask}?\n`;
+        const prompt = `Q:${ask[1]}?\n`;
         (async () => {
           const url = 'https://api.openai.com/v1/engines/davinci/completions';
           const params = {
@@ -57,6 +57,28 @@ function start(client) {
       let quote = await fetch("https://free-quotes-api.herokuapp.com/").then(res => res.json()).catch(err => console.log(err))
       let kata = await translate(quote.quote, "id");
       await client.sendText(message.from, `_${kata}_\n\n${quote.author === "" ? '' : `*~ ${quote.author}*`}`)
+    }
+    if (message.text.indexOf('/enid') > -1 && message.text.indexOf('/enid') < 1) {
+      let ask = message.text.split('/enid')
+      if(ask.length < 2){
+        await client.sendText(message.from, 'Kirim /enid *kata*')
+      }
+      else{
+        translate.from = "en";
+        let kata = await translate(ask[1], "id");
+        await client.sendText(message.from, `${kata}`)
+      }
+    }
+    if (message.text.indexOf('/iden') > -1 && message.text.indexOf('/iden') < 1) {
+      let ask = message.text.split('/iden')
+      if(ask.length < 2){
+        await client.sendText(message.from, 'Kirim /iden *kata*')
+      }
+      else{
+        translate.from = "id";
+        let kata = await translate(ask[1], "en");
+        await client.sendText(message.from, `${kata}`)
+      }
     }
     if (message.body === '/sticker') {
       await client.sendText(message.from, 'Kirim gambar dengan caption\n*/sticker*')
