@@ -16,7 +16,7 @@ function start(client) {
       }
     }
     if(message.body === '/bisaapa') {
-      await client.sendText(message.from, 'Saya bisa: \n\n- /tanya\n- /meme\n- /katabijak\n- /sticker\n- /jadwalsholat\n\n *Udah Itu Doang*\n\n_minta pembuat gua kalo pengen lebih_');  
+      await client.sendText(message.from, 'Saya bisa: \n\n- /tanya\n- /meme\n- /katabijak\n- /iden\n- /enid\n- /sticker\n- /jadwalsholat\n\n *Udah Itu Doang*\n\n_minta pembuat gua kalo pengen lebih_');  
     }
     if(message.text.indexOf('/tanya') > -1 && message.text.indexOf('/tanya') < 1){
       let ask = message.text.split('/tanya')
