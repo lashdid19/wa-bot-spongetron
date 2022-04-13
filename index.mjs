@@ -1,4 +1,3 @@
-
 import wa from '@open-wa/wa-automate';
 import { decryptMedia } from '@open-wa/wa-decrypt';
 import got from 'got';
@@ -87,9 +86,6 @@ function start(client) {
       if(message.text.indexOf('/sticker') > -1 && message.text.indexOf('/sticker') < 1){
         let mediaData = await decryptMedia(message);
         await client.sendImageAsSticker(message.from, `data:${message.mimetype};base64,${mediaData.toString('base64')}`, {author: "SpongeTron", pack: "Dibuat BOT", keepScale: true})
-      }
-      else if(message.text.indexOf('/sticker') >= 1){
-        await client.sendText(message.from, 'Kirim gambar dengan caption\n*/sticker*')
       }
     }
     if (message.body.indexOf('/jadwalsholat') > -1 && message.body.indexOf('/jadwalsholat') < 1) {
